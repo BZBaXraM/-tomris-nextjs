@@ -4,6 +4,7 @@ import { useEffect, useRef, useState, type ReactNode } from "react";
 import { locales, paths, type Locale, type PageIndex } from "@/lib/locale";
 import { useStudioMotion } from "@/lib/motion";
 import { LanguageProvider, useLanguage } from "./language-provider";
+import { StudioStar } from "./studio-star";
 function Chrome({ page, children }: { page: PageIndex; children: ReactNode }) {
   const { locale, setLocale, c, href } = useLanguage();
   const [open, setOpen] = useState(false);
@@ -72,13 +73,14 @@ function Chrome({ page, children }: { page: PageIndex; children: ReactNode }) {
         </button>
       </header>
       <main id="main" ref={main}>{children}</main>
-      <footer id="footer" ref={footer}>
+      <footer id="footer" ref={footer} data-scroll-scene="footer">
+        <StudioStar className="footer-star" />
         <div className="footer-top" data-reveal="up">
           <span>TOMRIS / CREATIVE STUDIO</span>
           <span>{c.footerSmall}</span>
         </div>
         <Link className="footer-headline" href={href("/contacts")} data-reveal="up">
-          {c.footer}
+          <span>{c.footer}</span><span className="footer-arrow" aria-hidden="true">↗</span>
         </Link>
         <div className="footer-bottom" data-reveal="up" data-delay="1">
           <span>

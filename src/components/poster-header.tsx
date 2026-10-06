@@ -1,6 +1,7 @@
 "use client";
 import { projectAssets } from "@/data/projects";
 import { useLanguage } from "./language-provider";
+import { StudioStar } from "./studio-star";
 export function PosterHeader({ index }: { index: 1 | 2 | 3 }) {
   const { c } = useLanguage();
   const title =
@@ -16,13 +17,14 @@ export function PosterHeader({ index }: { index: 1 | 2 | 3 }) {
         ? c.serviceIntro
         : c.contactIntro;
   return (
-    <section className="page-top poster">
+    <section className="page-top poster" data-scroll-scene="hero">
+      <StudioStar className="page-star" />
       <img
         className="page-artwork"
         src={`/assets/${projectAssets[index === 1 ? 2 : index === 2 ? 1 : 0]}`}
         alt=""
         fetchPriority="high"
-        data-reveal="right"
+        data-reveal="art"
         data-delay="2"
         data-parallax="12"
       />

@@ -83,6 +83,7 @@ export function PortfolioGrid({
             key={`${filter}:${i}`}
             data-reveal="up"
             data-delay={position % 3}
+            data-scroll-scene="project"
             aria-label={c.projects[i][0]}
             onClick={() => setProject(i)}
           >
@@ -100,7 +101,7 @@ export function PortfolioGrid({
               </span>
               <h3>{c.projects[i][0]}</h3>
               <p>{c.projects[i][2]}</p>
-              <span className="view-project">{c.nav[1]} +</span>
+              <span className="view-project">{c.nav[1]} <span aria-hidden="true">↗</span></span>
             </div>
           </button>
         ))}

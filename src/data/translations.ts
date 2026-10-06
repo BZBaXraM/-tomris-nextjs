@@ -339,6 +339,7 @@ export const content = {
 export const editorial = {
   az: {
     hero: ["BRENDİN", "ÖZ", "SƏSİ."],
+    scroll: "AŞAĞI BAXIN",
     note: "FİKİR / XARAKTER / TƏSİR",
     approach: "KONTENT EMALATXANASI",
     workshop: "İDEYA KONTENTƏ ÇEVRİLİR.",
@@ -347,6 +348,7 @@ export const editorial = {
   },
   ru: {
     hero: ["У БРЕНДА", "ЕСТЬ", "ГОЛОС."],
+    scroll: "ЛИСТАЙ ДАЛЬШЕ",
     note: "ИДЕЯ / ХАРАКТЕР / ВЛИЯНИЕ",
     approach: "МАСТЕРСКАЯ КОНТЕНТА",
     workshop: "ИДЕИ СТАНОВЯТСЯ КОНТЕНТОМ.",
@@ -355,6 +357,7 @@ export const editorial = {
   },
   en: {
     hero: ["EVERY BRAND", "HAS A", "VOICE."],
+    scroll: "SCROLL TO EXPLORE",
     note: "IDEA / CHARACTER / IMPACT",
     approach: "THE CONTENT WORKSHOP",
     workshop: "IDEAS BECOME CONTENT.",
