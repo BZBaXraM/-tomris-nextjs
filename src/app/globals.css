@@ -179,6 +179,7 @@ textarea:focus-visible {
   z-index: -2;
 }
 .hero {
+  width: 100%;
   aspect-ratio: 1.62;
   min-height: 600px;
   color: var(--ink);
@@ -540,6 +541,8 @@ textarea:focus-visible {
   color: #f7b5a7;
 }
 .service summary h2 {
+  min-width: 0;
+  overflow-wrap: anywhere;
   font-size: clamp(29px, 3.8vw, 52px);
   line-height: 1.1;
   font-weight: 400;
@@ -794,19 +797,6 @@ dialog::backdrop {
 .dialog-copy small {
   font-size: 13px;
   color: #e0b4a8;
-}
-.reveal {
-  animation: appear 0.5s ease both;
-}
-@keyframes appear {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
 }
 [hidden] {
   display: none !important;

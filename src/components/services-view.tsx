@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { useLanguage } from "./language-provider";
 import { PosterHeader } from "./poster-header";
+import { AnimatedService } from "./animated-service";
 export function ServicesView() {
   const { c, href } = useLanguage();
   return (
@@ -9,32 +10,31 @@ export function ServicesView() {
       <PosterHeader index={2} />
       <section className="services-page">
         {c.serviceNames.map((name, i) => (
-          <details
-            className="service"
+          <AnimatedService
             id={`service-${i}`}
             key={name}
-            open={i === 0 ? true : undefined}
+            initialOpen={i === 0}
+            summary={
+              <>
+                <span className="num">0{i + 1}</span>
+                <h2>{name}</h2>
+                <span className="plus" aria-hidden="true">
+                  +
+                </span>
+              </>
+            }
           >
-            <summary>
-              <span className="num">0{i + 1}</span>
-              <h2>{name}</h2>
-              <span className="plus" aria-hidden="true">
-                +
-              </span>
-            </summary>
-            <div className="service-detail">
-              <p>{c.serviceDesc[i]}</p>
-              <ul>
-                {c.serviceLists[i].map((item) => (
-                  <li key={item}>{item}</li>
-                ))}
-              </ul>
-            </div>
-          </details>
+            <p>{c.serviceDesc[i]}</p>
+            <ul>
+              {c.serviceLists[i].map((item) => (
+                <li key={item}>{item}</li>
+              ))}
+            </ul>
+          </AnimatedService>
         ))}
       </section>
       <section className="paper">
-        <div className="section-head">
+        <div className="section-head" data-reveal="up">
           <div>
             <span className="section-index">TOMRIS / PROCESS</span>
             <h2>{c.process}</h2>
@@ -45,7 +45,7 @@ export function ServicesView() {
         </div>
         <div className="process">
           {c.steps.map((step, i) => (
-            <div key={step[0]}>
+            <div key={step[0]} data-reveal="up" data-delay={i}>
               <b>0{i + 1}</b>
               <h3>{step[0]}</h3>
               <p>{step[1]}</p>

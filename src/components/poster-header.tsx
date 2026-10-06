@@ -16,21 +16,24 @@ export function PosterHeader({ index }: { index: 1 | 2 | 3 }) {
         ? c.serviceIntro
         : c.contactIntro;
   return (
-    <section className="page-top poster reveal">
+    <section className="page-top poster">
       <img
         className="page-artwork"
         src={`/assets/${projectAssets[index === 1 ? 2 : index === 2 ? 1 : 0]}`}
         alt=""
         fetchPriority="high"
+        data-reveal="right"
+        data-delay="2"
+        data-parallax="12"
       />
-      <span className="poster-label top-left">
+      <span className="poster-label top-left" data-reveal="up">
         0{index} / {c.nav[index]}
       </span>
       <div className="page-title">
-        <h1>{title}</h1>
+        <h1 data-reveal="up" data-delay="1">{title}</h1>
       </div>
-      <p className="page-intro">{subtitle}</p>
-      <span className="poster-label bottom-right">TOMRIS / STUDIO</span>
+      <p className="page-intro" data-reveal="up" data-delay="2">{subtitle}</p>
+      <span className="poster-label bottom-right" data-reveal="up" data-delay="3">TOMRIS / STUDIO</span>
     </section>
   );
 }

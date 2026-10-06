@@ -1,0 +1,344 @@
+/* Motion inspired by LegalX and Porte Group, adapted to TOMRIS posters. */
+:root {
+  --motion-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --motion-fast: 240ms;
+  --motion-reveal: 850ms;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+#main,
+#footer,
+.service {
+  scroll-margin-top: 24px;
+}
+
+/* Individual translate preserves the existing rotated artwork and lettering. */
+[data-parallax] {
+  translate: 0 var(--parallax-y, 0px);
+}
+
+[data-reveal] {
+  --reveal-x: 0px;
+  --reveal-y: 28px;
+  --reveal-delay: 0ms;
+}
+
+[data-reveal="left"] {
+  --reveal-x: -24px;
+  --reveal-y: 0px;
+}
+
+[data-reveal="right"] {
+  --reveal-x: 24px;
+  --reveal-y: 0px;
+}
+
+[data-delay="1"] { --reveal-delay: 90ms; }
+[data-delay="2"] { --reveal-delay: 180ms; }
+[data-delay="3"] { --reveal-delay: 270ms; }
+[data-delay="4"] { --reveal-delay: 360ms; }
+
+[data-motion="pending"] {
+  opacity: 0;
+  translate: var(--reveal-x) calc(var(--reveal-y) + var(--parallax-y, 0px));
+}
+
+[data-motion="visible"] {
+  animation: motion-reveal var(--motion-reveal) var(--motion-ease) var(--reveal-delay) backwards;
+}
+
+[data-motion="shown"] {
+  opacity: 1;
+  animation: none;
+}
+
+@keyframes motion-reveal {
+  from {
+    opacity: 0;
+    translate: var(--reveal-x) calc(var(--reveal-y) + var(--parallax-y, 0px));
+  }
+  to {
+    opacity: 1;
+    translate: 0 var(--parallax-y, 0px);
+  }
+}
+
+a,
+button,
+summary,
+input,
+textarea,
+select {
+  transition:
+    color var(--motion-fast) ease,
+    background-color var(--motion-fast) ease,
+    border-color var(--motion-fast) ease,
+    box-shadow 360ms var(--motion-ease),
+    translate 360ms var(--motion-ease),
+    scale var(--motion-fast) var(--motion-ease);
+}
+
+.header nav a,
+.text-link,
+.view-project,
+.filters button {
+  position: relative;
+  border-bottom-color: transparent;
+}
+
+.poster-link {
+  border-bottom-color: transparent;
+}
+
+.header nav a[aria-current="page"],
+.filters button[aria-pressed="true"] {
+  border-bottom-color: transparent;
+}
+
+.header nav a::after,
+.text-link::after,
+.poster-link::after,
+.view-project::after,
+.filters button::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 420ms var(--motion-ease);
+  pointer-events: none;
+}
+
+.text-link::after,
+.poster-link::after,
+.view-project::after,
+.header nav a[aria-current="page"]::after,
+.filters button[aria-pressed="true"]::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+.header nav a[aria-current="page"]::after {
+  background: var(--accent);
+}
+
+.header nav a:focus-visible::after,
+.filters button:focus-visible::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+.brand img {
+  transition: scale 420ms var(--motion-ease);
+}
+
+.project {
+  transition: background-color 420ms ease, box-shadow 420ms var(--motion-ease);
+}
+
+.project-image img {
+  transition: transform 800ms var(--motion-ease);
+}
+
+.project:hover .project-image img {
+  transform: none;
+}
+
+.project-badge {
+  transition: background-color 360ms ease, translate 500ms var(--motion-ease);
+}
+
+.project:focus-visible .project-image img {
+  transform: scale(1.035);
+}
+
+.project:focus-visible .view-project::after {
+  transform: scaleX(0.65);
+}
+
+.field label {
+  transition: color var(--motion-fast) ease;
+}
+
+.field:focus-within label {
+  color: white;
+}
+
+.field:focus-within input,
+.field:focus-within textarea,
+.field:focus-within select {
+  border-bottom-color: white;
+  box-shadow: 0 1px 0 white;
+}
+
+.plus {
+  transition: transform 420ms var(--motion-ease);
+}
+
+.menu-toggle span {
+  transition: transform 420ms var(--motion-ease);
+}
+
+.menu-toggle[aria-expanded="true"] span:first-child {
+  transform: translateY(3.5px) rotate(45deg);
+}
+
+.menu-toggle[aria-expanded="true"] span:last-child {
+  transform: translateY(-3.5px) rotate(-45deg);
+}
+
+dialog[open] {
+  animation: motion-dialog-in 420ms var(--motion-ease);
+}
+
+dialog[open]::backdrop {
+  animation: motion-backdrop-in 360ms ease both;
+}
+
+dialog[data-closing="true"]::backdrop {
+  animation: motion-backdrop-out 220ms ease forwards;
+}
+
+@keyframes motion-dialog-in {
+  from { opacity: 0; translate: 0 24px; scale: 0.98; }
+  to { opacity: 1; translate: 0 0; scale: 1; }
+}
+
+@keyframes motion-backdrop-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes motion-backdrop-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .brand:hover img { scale: 1.06; }
+  .header nav a:hover,
+  .language button:hover,
+  .filters button:hover { translate: 0 -2px; }
+
+  .header nav a:hover::after,
+  .filters button:hover::after {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+
+  .text-link:hover::after,
+  .poster-link:hover::after {
+    transform: scaleX(0.65);
+  }
+
+  .project:hover {
+    background-color: #a44337;
+    box-shadow: 0 14px 32px #22070430;
+  }
+
+  .project:hover .project-image img { transform: scale(1.035); }
+  .project:hover .project-badge { translate: 0 -3px; background-color: #48140fee; }
+  .project:hover .view-project::after { transform: scaleX(0.65); }
+
+  .solid-button:hover,
+  .brief-result button:hover { translate: 0 -3px; box-shadow: 0 8px 18px #22070430; }
+  .brief-result button:hover { background-color: #48140f50; }
+  .close-dialog:hover { background-color: #c85949; }
+  .service summary:hover { color: #ffd8cb; }
+  .footer-headline:hover { translate: 6px 0; }
+}
+
+.solid-button:active,
+.brief-result button:active,
+.language button:active,
+.filters button:active,
+.close-dialog:active {
+  scale: 0.97;
+}
+
+@media (max-width: 720px) {
+  [data-reveal] {
+    --reveal-y: 18px;
+  }
+
+  [data-reveal="left"],
+  [data-reveal="right"] {
+    --reveal-x: 0px;
+  }
+
+  .header nav {
+    display: flex;
+    visibility: hidden;
+    opacity: 0;
+    pointer-events: none;
+    translate: 0 -10px;
+    clip-path: inset(0 0 100% 0);
+    transition:
+      opacity 260ms ease,
+      translate 420ms var(--motion-ease),
+      clip-path 420ms var(--motion-ease),
+      visibility 0s 420ms;
+  }
+
+  .header nav.open {
+    visibility: visible;
+    opacity: 1;
+    pointer-events: auto;
+    translate: 0 0;
+    clip-path: inset(0);
+    transition-delay: 0s;
+  }
+
+  .header nav a {
+    opacity: 0;
+    translate: 0 -8px;
+    transition: opacity 220ms ease, translate 360ms var(--motion-ease), color 240ms ease;
+  }
+
+  .header nav.open a {
+    opacity: 1;
+    translate: 0 0;
+  }
+
+  .header nav.open a:nth-child(2) { transition-delay: 40ms; }
+  .header nav.open a:nth-child(3) { transition-delay: 80ms; }
+  .header nav.open a:nth-child(4) { transition-delay: 120ms; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+
+  [data-motion],
+  [data-parallax] {
+    opacity: 1;
+    translate: none;
+    animation: none;
+  }
+
+  .project:hover .project-image img,
+  .project:focus-visible .project-image img {
+    transform: none;
+  }
+
+  .brand:hover img,
+  .solid-button:active,
+  .brief-result button:active,
+  .language button:active,
+  .filters button:active,
+  .close-dialog:active { scale: 1; }
+
+  .header nav a:hover,
+  .language button:hover,
+  .filters button:hover,
+  .project:hover .project-badge,
+  .solid-button:hover,
+  .brief-result button:hover,
+  .footer-headline:hover { translate: none; }
+}

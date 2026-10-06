@@ -2,6 +2,7 @@
 import { useRef, useState, type FormEvent } from "react";
 import { useLanguage } from "./language-provider";
 import { PosterHeader } from "./poster-header";
+import { prefersReducedMotion } from "@/lib/motion";
 export function ContactsView() {
   const { c } = useLanguage();
   const [values, setValues] = useState({
@@ -20,7 +21,10 @@ export function ContactsView() {
     setPrepared(true);
     setStatus("");
     requestAnimationFrame(() =>
-      result.current?.scrollIntoView({ behavior: "smooth", block: "nearest" }),
+      result.current?.scrollIntoView({
+        behavior: prefersReducedMotion() ? "instant" : "smooth",
+        block: "nearest",
+      }),
     );
   }
   async function copyBrief() {
@@ -45,7 +49,7 @@ export function ContactsView() {
     <>
       <PosterHeader index={3} />
       <section className="contact-layout">
-        <div className="contact-info">
+        <div className="contact-info" data-reveal="up">
           <span className="section-index">{c.contactLabel}</span>
           <h2>{c.contactHeading}</h2>
           <p>{c.contactText}</p>
@@ -55,7 +59,7 @@ export function ContactsView() {
           </div>
         </div>
         <form className="brief-form" onSubmit={prepare}>
-          <div className="field">
+          <div className="field" data-reveal="up">
             <label htmlFor="name">{c.fields[0]} *</label>
             <input
               id="name"
@@ -69,7 +73,7 @@ export function ContactsView() {
               }
             />
           </div>
-          <div className="field">
+          <div className="field" data-reveal="up" data-delay="1">
             <label htmlFor="email">{c.fields[1]} *</label>
             <input
               id="email"
@@ -84,7 +88,7 @@ export function ContactsView() {
               }
             />
           </div>
-          <div className="field">
+          <div className="field" data-reveal="up" data-delay="1">
             <label htmlFor="brand">{c.fields[2]}</label>
             <input
               id="brand"
@@ -97,7 +101,7 @@ export function ContactsView() {
               }
             />
           </div>
-          <div className="field">
+          <div className="field" data-reveal="up" data-delay="2">
             <label htmlFor="service">{c.fields[3]}</label>
             <select
               id="service"
@@ -115,7 +119,7 @@ export function ContactsView() {
               ))}
             </select>
           </div>
-          <div className="field full">
+          <div className="field full" data-reveal="up" data-delay="2">
             <label htmlFor="message">{c.fields[4]} *</label>
             <textarea
               id="message"
@@ -129,14 +133,14 @@ export function ContactsView() {
               }
             />
           </div>
-          <div className="form-actions">
+          <div className="form-actions" data-reveal="up" data-delay="3">
             <button className="solid-button" type="submit">
               {c.prepare}
             </button>
           </div>
           <p className="form-note">{c.formNote}</p>
           {prepared && (
-            <div className="brief-result" ref={result}>
+            <div className="brief-result" ref={result} data-reveal="up">
               <h3>{c.briefReady}</h3>
               <pre>{brief}</pre>
               <div className="actions">

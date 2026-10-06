@@ -1,6 +1,7 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { projectAssets, projectCategories } from "@/data/projects";
+import { motionEase, prefersReducedMotion } from "@/lib/motion";
 import { useLanguage } from "./language-provider";
 export function PortfolioGrid({
   selected,
@@ -13,6 +14,35 @@ export function PortfolioGrid({
   const [filter, setFilter] = useState(-1);
   const [project, setProject] = useState<number | null>(null);
   const dialog = useRef<HTMLDialogElement>(null);
+  const closing = useRef<Animation | null>(null);
+  const titleId = useId();
+  useEffect(() => () => closing.current?.cancel(), []);
+  function closeProject() {
+    const element = dialog.current;
+    if (!element || closing.current) return;
+    if (prefersReducedMotion() || !element.animate) {
+      setProject(null);
+      return;
+    }
+    const style = getComputedStyle(element);
+    const opacity = style.opacity;
+    const translate = style.translate === "none" ? "0 0" : style.translate;
+    const scale = style.scale === "none" ? "1" : style.scale;
+    element.dataset.closing = "true";
+    const animation = element.animate(
+      { opacity: [opacity, "0"], translate: [translate, "0 12px"], scale: [scale, "0.985"] },
+      { duration: 220, easing: motionEase, fill: "forwards" },
+    );
+    closing.current = animation;
+    animation.onfinish = () => {
+      // Release the native modal and its focus trap only after the exit completes.
+      element.close();
+      animation.cancel();
+      closing.current = null;
+      delete element.dataset.closing;
+      setProject(null);
+    };
+  }
   useEffect(() => {
     const element = dialog.current;
     if (!element) return;
@@ -32,7 +62,7 @@ export function PortfolioGrid({
   return (
     <>
       {filters && (
-        <div className="filters" role="group" aria-label={c.nav[1]}>
+        <div className="filters" role="group" aria-label={c.nav[1]} data-reveal="up">
           {[c.all, ...c.categories].map((category, index) => (
             <button
               type="button"
@@ -46,11 +76,13 @@ export function PortfolioGrid({
         </div>
       )}
       <div className="work-grid">
-        {indices.map((i) => (
+        {indices.map((i, position) => (
           <button
             type="button"
             className="project"
-            key={i}
+            key={`${filter}:${i}`}
+            data-reveal="up"
+            data-delay={position % 3}
             aria-label={c.projects[i][0]}
             onClick={() => setProject(i)}
           >
@@ -75,7 +107,12 @@ export function PortfolioGrid({
       </div>
       <dialog
         ref={dialog}
+        aria-labelledby={titleId}
         onClose={() => setProject(null)}
+        onCancel={(event) => {
+          event.preventDefault();
+          closeProject();
+        }}
         onClick={(event) => {
           if (event.target !== dialog.current) return;
           const bounds = dialog.current.getBoundingClientRect();
@@ -85,14 +122,14 @@ export function PortfolioGrid({
             event.clientY < bounds.top ||
             event.clientY > bounds.bottom
           )
-            setProject(null);
+            closeProject();
         }}
       >
         <button
           type="button"
           className="close-dialog"
           aria-label={c.close}
-          onClick={() => setProject(null)}
+          onClick={closeProject}
         >
           ×
         </button>
@@ -106,7 +143,7 @@ export function PortfolioGrid({
               <span className="section-index">
                 0{project + 1} / {c.concept}
               </span>
-              <h2>{c.projects[project][0]}</h2>
+              <h2 id={titleId}>{c.projects[project][0]}</h2>
               <p>{c.projects[project][2]}</p>
               <small>{c.referenceNote}</small>
             </div>

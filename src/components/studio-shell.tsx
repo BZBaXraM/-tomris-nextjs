@@ -1,11 +1,16 @@
 "use client";
 import Link from "next/link";
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { locales, paths, type Locale, type PageIndex } from "@/lib/locale";
+import { useStudioMotion } from "@/lib/motion";
 import { LanguageProvider, useLanguage } from "./language-provider";
 function Chrome({ page, children }: { page: PageIndex; children: ReactNode }) {
   const { locale, setLocale, c, href } = useLanguage();
   const [open, setOpen] = useState(false);
+  const main = useRef<HTMLElement>(null);
+  const footer = useRef<HTMLElement>(null);
+  useStudioMotion(main, page);
+  useStudioMotion(footer, page);
   useEffect(() => {
     const close = (event: KeyboardEvent) => {
       if (event.key === "Escape") setOpen(false);
@@ -66,16 +71,16 @@ function Chrome({ page, children }: { page: PageIndex; children: ReactNode }) {
           <span />
         </button>
       </header>
-      <main id="main">{children}</main>
-      <footer id="footer">
-        <div className="footer-top">
+      <main id="main" ref={main}>{children}</main>
+      <footer id="footer" ref={footer}>
+        <div className="footer-top" data-reveal="up">
           <span>TOMRIS / CREATIVE STUDIO</span>
           <span>{c.footerSmall}</span>
         </div>
-        <Link className="footer-headline" href={href("/contacts")}>
+        <Link className="footer-headline" href={href("/contacts")} data-reveal="up">
           {c.footer}
         </Link>
-        <div className="footer-bottom">
+        <div className="footer-bottom" data-reveal="up" data-delay="1">
           <span>
             © {new Date().getFullYear()} {c.rights}
           </span>
