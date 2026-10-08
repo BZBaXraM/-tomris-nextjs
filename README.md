@@ -22,6 +22,35 @@ npm run build
 npm run start
 ```
 
+## Docker
+
+Для production-запуска установите Docker с Compose v2:
+
+```bash
+docker compose up -d --build --wait
+docker compose logs -f web
+```
+
+Сайт доступен на http://localhost:3000. Порт можно изменить: `PORT=8080 docker compose up -d --build --wait`.
+Остановка: `docker compose down`.
+
+Dockerfile использует Node.js 24 и многоэтапную standalone-сборку Next.js. Контейнер работает от пользователя `node`, содержит сервер, статические файлы и `public`; healthcheck проверяет главную страницу. Локальные `.env*` и служебные каталоги исключены из контекста сборки. Если появятся серверные секреты, передавайте их контейнеру через `environment` или `env_file` в Compose; переменные `NEXT_PUBLIC_*` необходимо задавать при сборке.
+
+## CI в GitHub Actions и деплой на Vercel
+
+Workflow `.github/workflows/ci-cd.yml` запускается для pull request, push в `main`/`master` и вручную через Actions. Он устанавливает зависимости через `npm ci`, генерирует типы маршрутов, проверяет TypeScript и выполняет production-сборку Next.js на Node.js 24. Секреты для CI не нужны. Для защиты основной ветки добавьте обязательную проверку `TypeScript and production build` в правила ветки.
+
+Деплой выполняет встроенная [интеграция Vercel с GitHub](https://vercel.com/docs/git/vercel-for-github):
+
+1. В Vercel выберите **Add New → Project** и импортируйте этот GitHub-репозиторий.
+2. Выберите Framework Preset **Next.js**, Root Directory — корень репозитория, Node.js — **24.x**. Оставьте стандартные Build Command и Output Directory.
+3. В настройках Git проекта укажите Production Branch `master` (текущая основная ветка), либо `main`, если переименуете её.
+4. Нажмите **Deploy**. После подключения Vercel автоматически создаёт production-деплои основной ветки и preview-деплои других веток и pull request.
+
+SSH, серверные ключи и публикация Docker-образа для Vercel не нужны. Переменные окружения приложения задаются в настройках проекта Vercel. Dockerfile и Compose остаются для локального production-запуска или самостоятельного хостинга.
+
+GitHub Actions и Vercel запускаются независимо: ошибка CI сама по себе не блокирует деплой Vercel. Обязательная проверка CI в правилах основной ветки блокирует слияние pull request с ошибками; для блокировки публикации самим Vercel настройте [Deployment Checks](https://vercel.com/docs/deployment-checks), если они доступны для вашего проекта.
+
 ## Структура и редактирование
 
 | Что изменить                 | Где                                        |
